@@ -89,3 +89,15 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64 
+sys_trace(void) {
+  int pid;
+  argint(0, &pid);
+  return trace(pid);
+}
+
+uint64
+sys_sysinfo(void) {
+  return sysinfo();
+}

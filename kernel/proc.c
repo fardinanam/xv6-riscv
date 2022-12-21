@@ -124,6 +124,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
+  p->traced_pid = 0;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -145,6 +146,9 @@ found:
   memset(&p->context, 0, sizeof(p->context));
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
+
+  // Initialize traced_pid to 0
+  // p->traced_pid = 0;
 
   return p;
 }
@@ -680,4 +684,38 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+// Counts and returns the number of currently used processes
+int
+nproc(void) {
+  struct proc *p;
+  int nuproc = NPROC;
+
+  for (p = proc; p < &proc[NPROC]; p++) {
+    if (p->state == UNUSED)
+      nuproc--;
+  }
+
+  return nuproc;
+}
+
+
+// Traces the proces with the given pid in the command following the "trace" command
+// @pid : pid of the process to be traced
+// @return : 0 on success, -1 on error
+int
+trace(int pid) {
+  struct proc *p = myproc();
+  p->traced_pid = pid;
+  return 0;
+}
+
+// Prints total free memory and number of currently used processes
+int 
+sysinfo(void) {
+  printf("\nfree-memory: %d bytes\n", freememcount());
+  printf("n_proc\t: %d\n\n", nproc());
+  
+  return 0;
 }
