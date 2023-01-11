@@ -124,7 +124,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
-  p->traced_pid = 0;
+  p->syscall_num = 0;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -693,28 +693,38 @@ nproc(void) {
   int nuproc = NPROC;
 
   for (p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
     if (p->state == UNUSED)
       nuproc--;
+    release(&p->lock);
   }
 
   return nuproc;
 }
 
-
-// Traces the proces with the given pid in the command following the "trace" command
-// @pid : pid of the process to be traced
+// Traces the proces with the given pid in the command following the "trace"
+// command
+// @param syscall_num : System call number of the process to be traced
 // @return : 0 on success, -1 on error
 int
-trace(int pid) {
+trace(int syscall_num) {
   struct proc *p = myproc();
-  p->traced_pid = pid;
+  if (syscall_num < 0) {
+    printf("Invalid system call number\n");
+    return -1;
+  }
+
+  acquire(&p->lock);
+  p->syscall_num = syscall_num;
+  release(&p->lock);
+
   return 0;
 }
 
 // Prints total free memory and number of currently used processes
 int 
 sysinfo(void) {
-  printf("\nfree-memory: %d bytes\n", freememcount());
+  printf("\nfree-memory: %d bytes\n", freemembytes());
   printf("n_proc\t: %d\n\n", nproc());
   
   return 0;

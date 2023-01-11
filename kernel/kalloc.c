@@ -83,7 +83,7 @@ kalloc(void)
 
 // Counts and returns total free memory in bytes
 int 
-freememcount() {
+freemembytes() {
   struct run *r;
   int freememcount = 0;
 
