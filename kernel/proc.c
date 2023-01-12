@@ -124,7 +124,7 @@ allocproc(void)
 found:
   p->pid = allocpid();
   p->state = USED;
-  p->syscall_num = 0;
+  p->traced_sysnum = 0;
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -704,18 +704,17 @@ nproc(void) {
 
 // Traces the proces with the given pid in the command following the "trace"
 // command
-// @param syscall_num : System call number of the process to be traced
+// @param traced_sysnum : System call number of the process to be traced
 // @return : 0 on success, -1 on error
-int
-trace(int syscall_num) {
+int trace(int traced_sysnum) {
   struct proc *p = myproc();
-  if (syscall_num < 0) {
+  if (traced_sysnum < 0) {
     printf("Invalid system call number\n");
     return -1;
   }
 
   acquire(&p->lock);
-  p->syscall_num = syscall_num;
+  p->traced_sysnum = traced_sysnum;
   release(&p->lock);
 
   return 0;

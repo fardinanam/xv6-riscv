@@ -91,7 +91,7 @@ struct proc {
   int killed;                  // If non-zero, have been killed
   int xstate;                  // Exit status to be returned to parent's wait
   int pid;                     // Process ID
-  int syscall_num;              // System call number of the process being traced
+  int traced_sysnum;           // System call number of the process being traced
 
   // wait_lock must be held when using this:
   struct proc *parent;         // Parent process

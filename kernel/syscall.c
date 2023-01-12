@@ -172,7 +172,7 @@ syscall(void)
     p->trapframe->a0 = returnValue;
 
     // Print the details of the traced process in the running process
-    if (num == p->syscall_num) {
+    if (num == p->traced_sysnum) {
     printf("pid: %d, syscall: %s, return value: %d\n", sys_getpid(),
            sysnames[num], returnValue);
     }
