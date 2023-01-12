@@ -92,9 +92,9 @@ sys_uptime(void)
 
 uint64 
 sys_trace(void) {
-  int pid;
-  argint(0, &pid);
-  return trace(pid);
+  int traced_sysnum;
+  argint(0, &traced_sysnum);
+  return trace(traced_sysnum);
 }
 
 uint64

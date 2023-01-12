@@ -64,7 +64,11 @@
     ```
     **eg: see the `trace()` function in `kernel/proc.c`** 
 
-7. Open `kernel/sysproc.c` and add the handler function that will execute the system call which has just been defined in step 6.
+7. Add the prototype of the new system call in `kernel/defs.h`. Preferably under the `proc.c` comment.
+
+    **eg: `int trace(int);`**
+
+8. Open `kernel/sysproc.c` and add the handler function that will execute the system call which has just been defined in step 6.
     ```c
         <return type>
         sys_<new_system_call_name>(void) {
@@ -72,7 +76,7 @@
         }
     ```
     **eg: see the `sys_trace()` function in `kernel/sysproc.c`**
-8. In `kernel/syscall.c`,
+9. In `kernel/syscall.c`,
     - extern the new system call handler function.
 
         ```c
@@ -89,4 +93,4 @@
 
         **eg: `[SYS_trace] sys_trace,`**
 
-9. Make required changes in other functions and files as required.
+10. Make required changes in other functions and files as required.
